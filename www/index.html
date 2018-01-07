@@ -9,31 +9,26 @@
   <link rel="stylesheet" href="css/speechtotext.css">
   <link rel="stylesheet" href="css/Footer-with-social-icons.css">
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
-  <title>My Web App</title>
+  <title>iCane</title>
 </head>
 <body>
 
 <!-- Navbar -->
-<nav class="navbar navbar-expand-sm navbar-dark bg-primary">
-  <a class="navbar-brand" href="#">iCane</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+<nav class="navbar fixed-bottom navbar-expand-sm navbar-light bg-light">
+ <!--  <a class="navbar-brand" href="#">iCane</a> -->
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="/index.html"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Link</a>
+        <a class="nav-link" href="/about.html"><i class="fa fa-user" aria-hidden="true"></i> About</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/debug.html"><i class="fa fa-bug" aria-hidden="true"></i> Debug</a>
       </li>
     </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
-  </div>
+
 </nav>
 
 <!-- <div class="pop">
@@ -42,13 +37,12 @@
   </button>
 </div> -->
 
-<div class="heading">
+<header>
   <h1>Welcome to iCane</h1>
-</div>
+</header>
 
 <!-- Map -->
 <div id="map" style="width:80%;height:400px;background:yellow;display:block;margin:auto;margin-top:30px;margin-bottom:20px;"></div>
-
 
 <!-- Debugging -->
 <div id="accordion" role="tablist">
@@ -130,7 +124,10 @@
     </div>
     <div id="collapseThree" class="collapse" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordion">
       <div class="card-body">
-        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+        <div id="deviceready" class="blink">
+            <p class="event listening">Connecting to Device</p>
+            <p class="event received">Device is Ready</p>
+        </div>
       </div>
     </div>
   </div>
@@ -192,6 +189,8 @@
           speak("This is a restroom.");
         });
       }
+
+
 </script>
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCM0IACb9WQcWcA2wVvDgdMCwPs58vYNEU&callback=initMap"
@@ -212,7 +211,226 @@ $('[data-toggle="popover"]').popover()
 
 <!-- Cordova -->
 <script src="cordova.js"></script>
-<script src="js/eddystone-debug.js"></script>
+<script>
+      // Application code starts here. The code is wrapped in a
+    // function closure to prevent overwriting global objects.
+    (function()
+    {
+        // Dictionary of beacons.
+        var beacons = {};
 
+        // Timer that displays list of beacons.
+        var timer = null;
+        var timer2 = null;
+
+        function onDeviceReady()
+        {
+            // Start tracking beacons!
+            setTimeout(startScan, 500);
+
+            // Timer that refreshes the display.
+            timer = setInterval(updateBeaconList, 500);
+            timer2 = setInterval(speakBeacons, 5000);
+        }
+
+        function onBackButtonDown()
+        {
+            evothings.eddystone.stopScan();
+            navigator.app.exitApp();
+        }
+
+        function startScan()
+        {
+            showMessage('Scan in progress.');
+            evothings.eddystone.startScan(
+                function(beacon)
+                {
+                    // Update beacon data.
+                    beacon.timeStamp = Date.now();
+                    beacons[beacon.address] = beacon;
+                },
+                function(error)
+                {
+                    showMessage('Eddystone scan error: ' + error);
+                });
+        }
+
+        // Map the RSSI value to a value between 1 and 100.
+        function mapBeaconRSSI(rssi)
+        {
+            if (rssi >= 0) return 1; // Unknown RSSI maps to 1.
+            if (rssi < -100) return 100; // Max RSSI
+            return 100 + rssi;
+        }
+
+        function getSortedBeaconList(beacons)
+        {
+            var beaconList = [];
+            for (var key in beacons)
+            {
+                beaconList.push(beacons[key]);
+            }
+            beaconList.sort(function(beacon1, beacon2)
+            {
+                return mapBeaconRSSI(beacon1.rssi) < mapBeaconRSSI(beacon2.rssi);
+            });
+            return beaconList;
+        }
+
+        function updateBeaconList()
+        {
+            removeOldBeacons();
+            displayBeacons();
+        }
+
+        function removeOldBeacons()
+        {
+            var timeNow = Date.now();
+            for (var key in beacons)
+            {
+                // Only show beacons updated during the last 60 seconds.
+                var beacon = beacons[key];
+                if (beacon.timeStamp + 60000 < timeNow)
+                {
+                    delete beacons[key];
+                }
+            }
+        }
+
+        function speakBeacons()
+        {
+            var sortedList = getSortedBeaconList(beacons);
+            for (var i = 0; i < sortedList.length; ++i)
+            {
+                var beacon = sortedList[i];
+                console.log("Comparing " + uint8ArrayToString(beacon.bid) + " to 11 or 00 (x6) and checking parseInt(beacon.rssi) if " + parseInt(beacon.rssi) + " is really >-60" );
+
+                if ( (uint8ArrayToString(beacon.bid) == "11 11 11 11 11 11 ") && (parseInt(beacon.rssi) >= -65) ) {
+                  speak("You are near the information desk.");
+                }
+               else if ( (uint8ArrayToString(beacon.bid) == "00 00 00 00 00 00 ") && (parseInt(beacon.rssi) >= -65) ) {
+                  speak("You are near the restrooms.");
+                }
+                else {
+                  // speak("You are not near anything.");
+                }
+            }
+        }
+
+        function displayBeacons()
+        {
+            var html = '';
+            var sortedList = getSortedBeaconList(beacons);
+            for (var i = 0; i < sortedList.length; ++i)
+            {
+                var beacon = sortedList[i];
+                var htmlBeacon =
+                    '<p>'
+                    +   htmlBeaconName(beacon)
+                    +   htmlBeaconURL(beacon)
+                    +   htmlBeaconNID(beacon)
+                    +   htmlBeaconBID(beacon)
+                    +   htmlBeaconVoltage(beacon)
+                    +   htmlBeaconTemperature(beacon)
+                    +   htmlBeaconRSSI(beacon)
+                    +   htmlBeaconRSSINearby(beacon)
+                    + '</p>';
+                html += htmlBeacon
+            }
+            document.querySelector('#found-beacons').innerHTML = html;
+        }
+
+        function htmlBeaconName(beacon)
+        {
+            var name = beacon.name || 'no name';
+            return '<strong>' + name + '</strong><br/>';
+        }
+
+        function htmlBeaconURL(beacon)
+        {
+            return beacon.url ?
+                'URL: ' + beacon.url + '<br/>' :  '';
+        }
+
+        function htmlBeaconURL(beacon)
+        {
+            return beacon.url ?
+                'URL: ' + beacon.url + '<br/>' :  '';
+        }
+
+        function htmlBeaconNID(beacon)
+        {
+            return beacon.nid ?
+                'NID: ' + uint8ArrayToString(beacon.nid) + '<br/>' :  '';
+        }
+
+        function htmlBeaconBID(beacon)
+        {
+            return beacon.bid ?
+                'BID: ' + uint8ArrayToString(beacon.bid) + '<br/>' :  '';
+        }
+
+        function htmlBeaconBIDRaw(beacon)
+        {
+            return beacon.bid ?
+                'BID: ' + beacon.bid + '<br/>' :  '';
+        }
+
+        function htmlBeaconVoltage(beacon)
+        {
+            return beacon.voltage ?
+                'Voltage: ' + beacon.voltage + '<br/>' :  '';
+        }
+
+        function htmlBeaconTemperature(beacon)
+        {
+            return beacon.temperature && beacon.temperature != 0x8000 ?
+                'Temperature: ' + beacon.temperature + '<br/>' :  '';
+        }
+
+        function htmlBeaconRSSI(beacon)
+        {
+            return beacon.rssi ?
+                'RSSI: ' + beacon.rssi + '<br/>' :  '';
+        }
+
+        function htmlBeaconRSSINearby(beacon)
+        {
+            return (parseInt(beacon.rssi) >= -65) ?
+                'Nearby: true' + '<br/>' :  'Nearby: false' + '<br/>';
+        }
+
+
+        function uint8ArrayToString(uint8Array)
+        {
+            function format(x)
+            {
+                var hex = x.toString(16);
+                return hex.length < 2 ? '0' + hex : hex;
+            }
+
+            var result = '';
+            for (var i = 0; i < uint8Array.length; ++i)
+            {
+                result += format(uint8Array[i]) + ' ';
+            }
+            return result;
+        }
+
+        function showMessage(text)
+        {
+            document.querySelector('#message').innerHTML = text;
+        }
+
+        // This calls onDeviceReady when Cordova has loaded everything.
+        document.addEventListener('deviceready', onDeviceReady, false);
+
+        // Add back button listener (for Android).
+        document.addEventListener('backbutton', onBackButtonDown, false);
+
+    })(); // End of closure.
+</script>
+<script>
+</script>
 </body>
 </html>

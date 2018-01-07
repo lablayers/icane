@@ -32,8 +32,9 @@ h1 {
   margin-top: 0;
   text-align: center;
 }
-.heading {
-  margin-top: 20px;
+heading {
+  padding-top: 20px;
+  font-weight: 900;
 }
 
 #msg {
