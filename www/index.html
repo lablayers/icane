@@ -1,240 +1,218 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, user-scalable=no
-        initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
-    <title>Eddystone Demo</title>
-
-    <script>
-    // Redirect console.log when running from Evothings Workbench.
-    if (window.hyper && window.hyper.log) { console.log = hyper.log }
-    </script>
-
-    <style>
-    body
-    {
-        font-family: sans-serif;
-    }
-
-    h1
-    {
-        margin-right:110px;
-    }
-
-    .evo-image
-    {
-        position:fixed;
-        right:5px;
-        top:5px;
-        width:100px;
-        height:auto;
-        background:white;
-    }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta.3/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/speechtotext.css">
+  <link rel="stylesheet" href="css/Footer-with-social-icons.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+  <title>My Web App</title>
 </head>
-
 <body>
 
-    <img class="evo-image" src="https://evomedia.evothings.com/2013/11/evothings_logo_large_white1.png" />
+<!-- Navbar -->
+<nav class="navbar navbar-expand-sm navbar-dark bg-primary">
+  <a class="navbar-brand" href="#">iCane</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
 
-    <h1>Eddystone Demo</h1>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Link</a>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+  </div>
+</nav>
 
-    <p id="message">Preparing...</p>
+<!-- <div class="pop">
+  <button type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="top" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
+    Popover on top
+  </button>
+</div> -->
 
-    <div id="found-beacons"></div>
+<div class="heading">
+  <h1>Welcome to iCane</h1>
+</div>
 
-    <!--
-    Including cordova.js will automatically include the JavaScript library
-    for Eddystone.
-    -->
-    <script src="cordova.js"></script>
+<!-- Map -->
+<div id="map" style="width:80%;height:400px;background:yellow;display:block;margin:auto;margin-top:30px;margin-bottom:20px;"></div>
 
-    <script>
-    // Application code starts here. The code is wrapped in a
-    // function closure to prevent overwriting global objects.
-    (function()
-    {
-        // Dictionary of beacons.
-        var beacons = {};
 
-        // Timer that displays list of beacons.
-        var timer = null;
+<!-- Debugging -->
+<div id="accordion" role="tablist">
+  <div class="card">
+    <div class="card-header" role="tab" id="headingOne">
+      <h5 class="mb-0">
+        <a data-toggle="collapse" href="#collapseOne" role="button" aria-expanded="true" aria-controls="collapseOne">
+          Text to Speech
+        </a>
+      </h5>
+    </div>
 
-        function onDeviceReady()
-        {
-            // Start tracking beacons!
-            setTimeout(startScan, 500);
+    <div id="collapseOne" class="collapse show" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
+      <div class="card-body">
+        <div id="speech-to-text">
+          <div id="page-wrapper">
+          <h1>Points of Interest</h1>
 
-            // Timer that refreshes the display.
-            timer = setInterval(updateBeaconList, 500);
-        }
+          <p id="msg"></p>
 
-        function onBackButtonDown()
-        {
-            evothings.eddystone.stopScan();
-            navigator.app.exitApp();
-        }
+          <input type="text" name="speech-msg" id="speech-msg" x-webkit-speech>
 
-        function startScan()
-        {
-            showMessage('Scan in progress.');
-            evothings.eddystone.startScan(
-                function(beacon)
-                {
-                    // Update beacon data.
-                    beacon.timeStamp = Date.now();
-                    beacons[beacon.address] = beacon;
-                },
-                function(error)
-                {
-                    showMessage('Eddystone scan error: ' + error);
-                });
-        }
+          <div class="option">
+            <label for="voice">Voice</label>
+            <select name="voice" id="voice"></select>
+          </div>
+          <div class="option">
+            <label for="volume">Volume</label>
+            <input type="range" min="0" max="1" step="0.1" name="volume" id="volume" value="1">
+          </div>
+          <div class="option">
+            <label for="rate">Rate</label>
+            <input type="range" min="0.1" max="10" step="0.1" name="rate" id="rate" value="1">
+          </div>
+          <div class="option">
+            <label for="pitch">Pitch</label>
+            <input type="range" min="0" max="2" step="0.1" name="pitch" id="pitch" value="1">
+          </div>
 
-        // Map the RSSI value to a value between 1 and 100.
-        function mapBeaconRSSI(rssi)
-        {
-            if (rssi >= 0) return 1; // Unknown RSSI maps to 1.
-            if (rssi < -100) return 100; // Max RSSI
-            return 100 + rssi;
-        }
+          <button id="speak">Speak</button>
+        <!--
+          <div class="row">
+            <div class="col-md-6">
+              <button id="info" href="">Info</button>
+            </div>
+            <div class="col-md-6">
+              <button id="restroom">Restroom</button>
+            </div>
+          </div>
+         -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header" role="tab" id="headingTwo">
+      <h5 class="mb-0">
+        <a class="collapsed" data-toggle="collapse" href="#collapseTwo" role="button" aria-expanded="false" aria-controls="collapseTwo">
+          Beacons Information
+        </a>
+      </h5>
+    </div>
+    <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo" data-parent="#accordion">
+      <div class="card-body">
+        <p id="message">Preparing...</p>
 
-        function getSortedBeaconList(beacons)
-        {
-            var beaconList = [];
-            for (var key in beacons)
-            {
-                beaconList.push(beacons[key]);
-            }
-            beaconList.sort(function(beacon1, beacon2)
-            {
-                return mapBeaconRSSI(beacon1.rssi) < mapBeaconRSSI(beacon2.rssi);
-            });
-            return beaconList;
-        }
+        <div id="found-beacons"></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header" role="tab" id="headingThree">
+      <h5 class="mb-0">
+        <a class="collapsed" data-toggle="collapse" href="#collapseThree" role="button" aria-expanded="false" aria-controls="collapseThree">
+          Generic View
+        </a>
+      </h5>
+    </div>
+    <div id="collapseThree" class="collapse" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordion">
+      <div class="card-body">
+        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+      </div>
+    </div>
+  </div>
+</div>
 
-        function updateBeaconList()
-        {
-            removeOldBeacons();
-            displayBeacons();
-        }
+<!-- Footer -->
+<footer id="myFooter">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12 myCols">
+        <h5>Our Team</h5>
+        <ul>
+          <li>Ammar Al-Kahfah</li>
+          <li>Ali Sharaf</li>
+          <li>Victor Lourng</li>
+          <li>Gregory Kofman</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="social-networks">
+    <a href="https://twitter.com/DragonHacksIEEE" target="_blank" class="twitter"><i class="fa fa-twitter"></i></a>
+    <a href="https://www.facebook.com/events/1651794458197007/" target="_blank" class="facebook"><i class="fa fa-facebook-official"></i></a>
+  </div>
+  <div class="footer-copyright">
+    <p>© 2018 Copyright DragonHacks </p>
+  </div>
+</footer>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!-- Google Map Scripts -->
+<!-- API KEY: AIzaSyCwsgt4H1TnyCxRx0hirV5tOJrfbAntlTI -->
+<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCwsgt4H1TnyCxRx0hirV5tOJrfbAntlTI&callback=myMap"></script> -->
+<script>
+      var map;
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: 39.955112, lng: -75.187941},
+          zoom: 19
+        });
 
-        function removeOldBeacons()
-        {
-            var timeNow = Date.now();
-            for (var key in beacons)
-            {
-                // Only show beacons updated during the last 60 seconds.
-                var beacon = beacons[key];
-                if (beacon.timeStamp + 60000 < timeNow)
-                {
-                    delete beacons[key];
-                }
-            }
-        }
+        var infoMarker = new google.maps.Marker({
+          position: {lat: 39.955112, lng: -75.187641},
+          map: map,
+          title: 'Information Desk'
+        });
 
-        function displayBeacons()
-        {
-            var html = '';
-            var sortedList = getSortedBeaconList(beacons);
-            for (var i = 0; i < sortedList.length; ++i)
-            {
-                var beacon = sortedList[i];
-                var htmlBeacon =
-                    '<p>'
-                    +   htmlBeaconName(beacon)
-                    +   htmlBeaconURL(beacon)
-                    +   htmlBeaconNID(beacon)
-                    +   htmlBeaconBID(beacon)
-                    +   htmlBeaconVoltage(beacon)
-                    +   htmlBeaconTemperature(beacon)
-                    +   htmlBeaconRSSI(beacon)
-                    + '</p>';
-                html += htmlBeacon
-            }
-            document.querySelector('#found-beacons').innerHTML = html;
-        }
+        var restroomMarker = new google.maps.Marker({
+          position: {lat: 39.955152, lng: -75.1882},
+          map: map,
+          title: 'Restroom'
+        });
 
-        function htmlBeaconName(beacon)
-        {
-            var name = beacon.name || 'no name';
-            return '<strong>' + name + '</strong><br/>';
-        }
+        infoMarker.addListener('click', function() {
+          speak("This is the information desk.");
+        });
 
-        function htmlBeaconURL(beacon)
-        {
-            return beacon.url ?
-                'URL: ' + beacon.url + '<br/>' :  '';
-        }
+        restroomMarker.addListener('click', function() {
+          speak("This is a restroom.");
+        });
+      }
+</script>
 
-        function htmlBeaconURL(beacon)
-        {
-            return beacon.url ?
-                'URL: ' + beacon.url + '<br/>' :  '';
-        }
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCM0IACb9WQcWcA2wVvDgdMCwPs58vYNEU&callback=initMap"
+    async defer></script>
 
-        function htmlBeaconNID(beacon)
-        {
-            return beacon.nid ?
-                'NID: ' + uint8ArrayToString(beacon.nid) + '<br/>' :  '';
-        }
+<!-- Speech to Text Script -->
+<script src="js/speechtotextscript.js"></script>
 
-        function htmlBeaconBID(beacon)
-        {
-            return beacon.bid ?
-                'BID: ' + uint8ArrayToString(beacon.bid) + '<br/>' :  '';
-        }
+<!-- More Scripts  -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta.3/js/bootstrap.bundle.min.js"></script>
 
-        function htmlBeaconVoltage(beacon)
-        {
-            return beacon.voltage ?
-                'Voltage: ' + beacon.voltage + '<br/>' :  '';
-        }
+<script>
+$(function () {
+$('[data-toggle="popover"]').popover()
+})
+</script>
 
-        function htmlBeaconTemperature(beacon)
-        {
-            return beacon.temperature && beacon.temperature != 0x8000 ?
-                'Temperature: ' + beacon.temperature + '<br/>' :  '';
-        }
-
-        function htmlBeaconRSSI(beacon)
-        {
-            return beacon.rssi ?
-                'RSSI: ' + beacon.rssi + '<br/>' :  '';
-        }
-
-        function uint8ArrayToString(uint8Array)
-        {
-            function format(x)
-            {
-                var hex = x.toString(16);
-                return hex.length < 2 ? '0' + hex : hex;
-            }
-
-            var result = '';
-            for (var i = 0; i < uint8Array.length; ++i)
-            {
-                result += format(uint8Array[i]) + ' ';
-            }
-            return result;
-        }
-
-        function showMessage(text)
-        {
-            document.querySelector('#message').innerHTML = text;
-        }
-
-        // This calls onDeviceReady when Cordova has loaded everything.
-        document.addEventListener('deviceready', onDeviceReady, false);
-
-        // Add back button listener (for Android).
-        document.addEventListener('backbutton', onBackButtonDown, false);
-
-    })(); // End of closure.
-    </script>
+<!-- Cordova -->
+<script src="cordova.js"></script>
+<script src="js/eddystone-debug.js"></script>
 
 </body>
-
 </html>
