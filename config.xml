@@ -22,8 +22,12 @@
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
     </platform>
+    <icon src="res/icon/default.png" />
+    <splash src="res/screen/anything.png" />
     <plugin name="cordova-plugin-eddystone" spec="~1.3.0" />
     <plugin name="cordova-plugin-whitelist" spec="1" />
-    <engine name="ios" spec="4.5.4" />
     <plugin name="cordova-plugin-console" spec="^1.1.0" />
+    <plugin name="cordova-plugin-splashscreen" spec="^5.0.1" />
+    <splash src="res/screen/anything.png" />
+    <engine name="ios" spec="4.5.4" />
 </widget>

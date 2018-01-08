@@ -22,6 +22,10 @@
     <feature name="BLE">
         <param name="ios-package" value="EVOBLE" />
     </feature>
+    <feature name="SplashScreen">
+        <param name="ios-package" value="CDVSplashScreen" />
+        <param name="onload" value="true" />
+    </feature>
     <name>iCane</name>
     <description>
         A sample Apache Cordova application that responds to the deviceready event.
@@ -37,6 +41,8 @@
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
+    <icon src="res/icon/default.png" />
+    <splash src="res/screen/anything.png" />
     <allow-intent href="itms:*" />
     <allow-intent href="itms-apps:*" />
     <preference name="AllowInlineMediaPlayback" value="false" />

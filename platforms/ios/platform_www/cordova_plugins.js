@@ -15,6 +15,14 @@ module.exports = [
     "clobbers": [
       "evothings.eddystone"
     ]
+  },
+  {
+    "id": "cordova-plugin-splashscreen.SplashScreen",
+    "file": "plugins/cordova-plugin-splashscreen/www/splashscreen.js",
+    "pluginId": "cordova-plugin-splashscreen",
+    "clobbers": [
+      "navigator.splashscreen"
+    ]
   }
 ];
 module.exports.metadata = 
@@ -22,7 +30,8 @@ module.exports.metadata =
 {
   "cordova-plugin-ble": "2.0.1",
   "cordova-plugin-eddystone": "1.3.0",
-  "cordova-plugin-whitelist": "1.3.3"
+  "cordova-plugin-whitelist": "1.3.3",
+  "cordova-plugin-splashscreen": "5.0.1"
 };
 // BOTTOM OF METADATA
 });

@@ -12,12 +12,6 @@
   width: 80%;
 }
 
-html {
-  font-family: Helvetica, Arial, sans-serif;
-  font-size: 100%;
-  background: #333;
-}
-
 #page-wrapper {
   width: 80%;
   background: #FFFFFF;
@@ -28,10 +22,6 @@ html {
   margin-bottom: 30px;
 }
 
-h1 {
-  margin-top: 0;
-  text-align: center;
-}
 heading {
   padding-top: 20px;
   font-weight: 900;
@@ -71,7 +61,7 @@ label {
 }
 
 #speak {
-  display: inline-block;
+/*   display: inline-block;
   border-radius: 3px;
   border: none;
   font-size: 0.9rem;
@@ -83,7 +73,7 @@ label {
   font-weight: bold;
   margin: 0;
   width: 100%;
-  text-align: center;
+  text-align: center; */
 }
 
 /* #info {
@@ -127,4 +117,10 @@ button:hover, button:focus {
 button:active {
   opacity: 1;
   box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.1) inset;
+}
+
+.hidden {
+  visibility: hidden!important;
+  height: 0!important;
+  width: 0!important;
 }

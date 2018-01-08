@@ -4,9 +4,9 @@
 var supportMsg = document.getElementById('msg');
 
 if ('speechSynthesis' in window) {
-	supportMsg.innerHTML = 'Your browser <strong>supports</strong> speech synthesis.';
+	supportMsg.innerHTML = 'Your device <strong>supports</strong> speech synthesis.';
 } else {
-	supportMsg.innerHTML = 'Sorry your browser <strong>does not support</strong> speech synthesis.<br>Try this in <a href="https://www.google.co.uk/intl/en/chrome/browser/canary.html">Chrome Canary</a>.';
+	supportMsg.innerHTML = 'Sorry your device <strong>does not support</strong> speech synthesis.<br>Try this in <a href="https://www.google.co.uk/intl/en/chrome/browser/canary.html">a newer version of iOS</a>.';
 	supportMsg.classList.add('not-supported');
 }
 
@@ -47,6 +47,7 @@ function loadVoices() {
 
 // Execute loadVoices.
 loadVoices();
+voiceSelect.value = "Samantha";
 
 // Chrome loads voices asynchronously.
 window.speechSynthesis.onvoiceschanged = function(e) {
@@ -78,9 +79,20 @@ function speak(text) {
 	window.speechSynthesis.speak(msg);
 }
 
+// On Ready
+// $( document ).ready(function() {
+// 	if (speechMsgInput.value.length > 0) {
+// 		voiceSelect.value = "Samantha";
+// 		speak(speechMsgInput.value);
+// 	}
+
+// });
+
 
 // Set up an event listener for when the 'speak' button is clicked.
 button.addEventListener('click', function(e) {
+  	// Select samantha if available
+	voiceSelect.value = "Samantha";
 	if (speechMsgInput.value.length > 0) {
 		speak(speechMsgInput.value);
 	}

@@ -12,6 +12,9 @@
     },
     "cordova-plugin-whitelist": {
       "PACKAGE_NAME": "com.team.icane"
+    },
+    "cordova-plugin-splashscreen": {
+      "PACKAGE_NAME": "com.team.icane"
     }
   },
   "dependent_plugins": {

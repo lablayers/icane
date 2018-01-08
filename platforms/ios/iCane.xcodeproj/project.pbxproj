@@ -18,6 +18,8 @@
 		6AFF5BF91D6E424B00AB3073 /* CDVLaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6AFF5BF81D6E424B00AB3073 /* CDVLaunchScreen.storyboard */; };
 		FBEB1E7EFF794D6C8B9B98B5 /* EVOBLE.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ECCED117CA942AB87199A9D /* EVOBLE.m */; };
 		9F9A030BCE34436A9E676611 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81CD4AB71CD4457AB007F9B3 /* CoreBluetooth.framework */; };
+		46E15966E99548D1A7BBBBCB /* CDVSplashScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 17FC8C71BBB1414F80E9F18C /* CDVSplashScreen.m */; };
+		35D8313E2E4F496C879782AC /* CDVViewController+SplashScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 834F7FF883CB4DA5A2D263E7 /* CDVViewController+SplashScreen.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +63,10 @@
 		6ECCED117CA942AB87199A9D /* EVOBLE.m */ = {isa = PBXFileReference; name = "EVOBLE.m"; path = "cordova-plugin-ble/EVOBLE.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
 		373864680660491BA697E93E /* EVOBLE.h */ = {isa = PBXFileReference; name = "EVOBLE.h"; path = "cordova-plugin-ble/EVOBLE.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 		81CD4AB71CD4457AB007F9B3 /* CoreBluetooth.framework */ = {isa = PBXFileReference; name = "CoreBluetooth.framework"; path = "System/Library/Frameworks/CoreBluetooth.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
+		17FC8C71BBB1414F80E9F18C /* CDVSplashScreen.m */ = {isa = PBXFileReference; name = "CDVSplashScreen.m"; path = "cordova-plugin-splashscreen/CDVSplashScreen.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
+		834F7FF883CB4DA5A2D263E7 /* CDVViewController+SplashScreen.m */ = {isa = PBXFileReference; name = "CDVViewController+SplashScreen.m"; path = "cordova-plugin-splashscreen/CDVViewController+SplashScreen.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
+		CD163C27833F4223A504E6FC /* CDVSplashScreen.h */ = {isa = PBXFileReference; name = "CDVSplashScreen.h"; path = "cordova-plugin-splashscreen/CDVSplashScreen.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		8EED9CECF263462CBC04335F /* CDVViewController+SplashScreen.h */ = {isa = PBXFileReference; name = "CDVViewController+SplashScreen.h"; path = "cordova-plugin-splashscreen/CDVViewController+SplashScreen.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -168,6 +174,10 @@
 			children = (
 				6ECCED117CA942AB87199A9D /* EVOBLE.m */,
 				373864680660491BA697E93E /* EVOBLE.h */,
+				17FC8C71BBB1414F80E9F18C /* CDVSplashScreen.m */,
+				834F7FF883CB4DA5A2D263E7 /* CDVViewController+SplashScreen.m */,
+				CD163C27833F4223A504E6FC /* CDVSplashScreen.h */,
+				8EED9CECF263462CBC04335F /* CDVViewController+SplashScreen.h */,
 			);
 			name = Plugins;
 			path = "iCane/Plugins";
@@ -281,6 +291,8 @@
 				1D3623260D0F684500981E51 /* AppDelegate.m in Sources */,
 				302D95F114D2391D003F00A1 /* MainViewController.m in Sources */,
 				FBEB1E7EFF794D6C8B9B98B5 /* EVOBLE.m in Sources */,
+				46E15966E99548D1A7BBBBCB /* CDVSplashScreen.m in Sources */,
+				35D8313E2E4F496C879782AC /* CDVViewController+SplashScreen.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

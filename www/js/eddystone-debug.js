@@ -1,4 +1,4 @@
-    // Application code starts here. The code is wrapped in a
+      // Application code starts here. The code is wrapped in a
     // function closure to prevent overwriting global objects.
     (function()
     {
@@ -7,6 +7,7 @@
 
         // Timer that displays list of beacons.
         var timer = null;
+        var timer2 = null;
 
         function onDeviceReady()
         {
@@ -15,6 +16,7 @@
 
             // Timer that refreshes the display.
             timer = setInterval(updateBeaconList, 500);
+            timer2 = setInterval(speakBeacons, 5000);
         }
 
         function onBackButtonDown()
@@ -81,6 +83,25 @@
             }
         }
 
+        function speakBeacons()
+        {
+            var sortedList = getSortedBeaconList(beacons);
+            for (var i = 0; i < sortedList.length; ++i)
+            {
+                var beacon = sortedList[i];
+                console.log("Comparing " + uint8ArrayToString(beacon.bid) + " to 11 or 00 (x6) and checking parseInt(beacon.rssi) if " + parseInt(beacon.rssi) + " is really >-60" )
+                if ( (uint8ArrayToString(beacon.bid) == "11 11 11 11 11 11 ") && (parseInt(beacon.rssi) >= -65) ) {
+                  speak("You are near the information desk.");
+                }
+               else if ( (uint8ArrayToString(beacon.bid) == "00 00 00 00 00 00 ") && (parseInt(beacon.rssi) >= -65) ) {
+                  speak("You are near the restrooms.");
+                }
+                else {
+                  // speak("You are not near anything.");
+                }
+            }
+        }
+
         function displayBeacons()
         {
             var html = '';
@@ -97,6 +118,7 @@
                     +   htmlBeaconVoltage(beacon)
                     +   htmlBeaconTemperature(beacon)
                     +   htmlBeaconRSSI(beacon)
+                    +   htmlBeaconRSSINearby(beacon)
                     + '</p>';
                 html += htmlBeacon
             }
@@ -133,6 +155,12 @@
                 'BID: ' + uint8ArrayToString(beacon.bid) + '<br/>' :  '';
         }
 
+        function htmlBeaconBIDRaw(beacon)
+        {
+            return beacon.bid ?
+                'BID: ' + beacon.bid + '<br/>' :  '';
+        }
+
         function htmlBeaconVoltage(beacon)
         {
             return beacon.voltage ?
@@ -150,6 +178,13 @@
             return beacon.rssi ?
                 'RSSI: ' + beacon.rssi + '<br/>' :  '';
         }
+
+        function htmlBeaconRSSINearby(beacon)
+        {
+            return (parseInt(beacon.rssi) >= -65) ?
+                'Nearby: true' + '<br/>' :  'Nearby: false' + '<br/>';
+        }
+
 
         function uint8ArrayToString(uint8Array)
         {
